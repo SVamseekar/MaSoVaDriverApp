@@ -1,0 +1,145 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with Gradient -->
+  <rect width="1024" height="1024" rx="225" fill="url(#bgGradient)"/>
+
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="50%" stop-color="#2d2d2d"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+
+    <linearGradient id="carGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e0e0e0"/>
+    </linearGradient>
+
+    <linearGradient id="chromeGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5f5f5"/>
+      <stop offset="30%" stop-color="#d4d4d4"/>
+      <stop offset="60%" stop-color="#f0f0f0"/>
+      <stop offset="100%" stop-color="#c0c0c0"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="12"/>
+      <feOffset dx="0" dy="8" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.4"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rolls-Royce Luxury Car -->
+  <g transform="translate(150, 360)" filter="url(#shadow)">
+
+    <!-- Car Body - Sleek Sedan Shape -->
+    <!-- Rear Section -->
+    <path d="M 100 140 L 120 100 L 280 100 L 300 140 Z" fill="url(#carGradient)" stroke="#a0a0a0" stroke-width="2"/>
+
+    <!-- Roof Line (Classic Rolls-Royce Profile) -->
+    <path d="M 280 100 L 400 80 L 580 80 L 620 100 L 280 100 Z" fill="url(#carGradient)" stroke="#a0a0a0" stroke-width="2"/>
+
+    <!-- Front Hood -->
+    <path d="M 620 100 L 700 120 L 720 140 L 620 140 Z" fill="url(#carGradient)" stroke="#a0a0a0" stroke-width="2"/>
+
+    <!-- Main Body -->
+    <path d="M 100 140 L 720 140 L 720 180 L 100 180 Z" fill="url(#carGradient)" stroke="#a0a0a0" stroke-width="2"/>
+
+    <!-- Windows -->
+    <!-- Rear Window -->
+    <path d="M 135 110 L 155 118 L 265 118 L 280 110 Z" fill="#4a4a4a" opacity="0.8"/>
+
+    <!-- Rear Door Window -->
+    <path d="M 300 110 L 315 105 L 385 105 L 395 110 Z" fill="#4a4a4a" opacity="0.8"/>
+
+    <!-- Front Door Window -->
+    <path d="M 410 105 L 420 100 L 560 100 L 575 105 Z" fill="#4a4a4a" opacity="0.8"/>
+
+    <!-- Windshield -->
+    <path d="M 590 105 L 605 95 L 680 110 L 690 118 Z" fill="#4a4a4a" opacity="0.7"/>
+
+    <!-- Iconic Rolls-Royce Grille -->
+    <rect x="695" y="135" width="35" height="35" rx="2" fill="url(#chromeGradient)" stroke="#d0d0d0" stroke-width="1"/>
+    <line x1="700" y1="140" x2="700" y2="165" stroke="#a0a0a0" stroke-width="1.5"/>
+    <line x1="705" y1="140" x2="705" y2="165" stroke="#a0a0a0" stroke-width="1.5"/>
+    <line x1="710" y1="140" x2="710" y2="165" stroke="#a0a0a0" stroke-width="1.5"/>
+    <line x1="715" y1="140" x2="715" y2="165" stroke="#a0a0a0" stroke-width="1.5"/>
+    <line x1="720" y1="140" x2="720" y2="165" stroke="#a0a0a0" stroke-width="1.5"/>
+    <line x1="725" y1="140" x2="725" y2="165" stroke="#a0a0a0" stroke-width="1.5"/>
+
+    <!-- Spirit of Ecstasy Hood Ornament (Iconic Rolls-Royce Feature) -->
+    <g transform="translate(735, 125)">
+      <path d="M 0 0 L -3 -15 L 0 -20 L 3 -15 Z" fill="url(#chromeGradient)" filter="url(#glow)"/>
+      <circle cx="0" cy="-22" r="3" fill="#f0f0f0"/>
+    </g>
+
+    <!-- Headlights -->
+    <ellipse cx="710" cy="150" rx="8" ry="6" fill="#fff9e6" opacity="0.9"/>
+    <ellipse cx="700" cy="152" rx="6" ry="5" fill="#fff3b0" opacity="0.8"/>
+
+    <!-- Chrome Details -->
+    <line x1="100" y1="170" x2="720" y2="170" stroke="url(#chromeGradient)" stroke-width="3" stroke-linecap="round"/>
+    <line x1="300" y1="145" x2="300" y2="175" stroke="#c0c0c0" stroke-width="2"/>
+    <line x1="620" y1="145" x2="620" y2="175" stroke="#c0c0c0" stroke-width="2"/>
+
+    <!-- Luxury Wheels -->
+    <!-- Rear Wheel -->
+    <g transform="translate(220, 185)">
+      <circle cx="0" cy="0" r="50" fill="#2a2a2a"/>
+      <circle cx="0" cy="0" r="45" fill="#3a3a3a"/>
+      <circle cx="0" cy="0" r="25" fill="url(#chromeGradient)"/>
+      <!-- Spokes -->
+      <line x1="-18" y1="0" x2="18" y2="0" stroke="#d0d0d0" stroke-width="2"/>
+      <line x1="0" y1="-18" x2="0" y2="18" stroke="#d0d0d0" stroke-width="2"/>
+      <line x1="-13" y1="-13" x2="13" y2="13" stroke="#d0d0d0" stroke-width="2"/>
+      <line x1="13" y1="-13" x2="-13" y2="13" stroke="#d0d0d0" stroke-width="2"/>
+      <circle cx="0" cy="0" r="8" fill="#f0f0f0"/>
+    </g>
+
+    <!-- Front Wheel -->
+    <g transform="translate(620, 185)">
+      <circle cx="0" cy="0" r="50" fill="#2a2a2a"/>
+      <circle cx="0" cy="0" r="45" fill="#3a3a3a"/>
+      <circle cx="0" cy="0" r="25" fill="url(#chromeGradient)"/>
+      <!-- Spokes -->
+      <line x1="-18" y1="0" x2="18" y2="0" stroke="#d0d0d0" stroke-width="2"/>
+      <line x1="0" y1="-18" x2="0" y2="18" stroke="#d0d0d0" stroke-width="2"/>
+      <line x1="-13" y1="-13" x2="13" y2="13" stroke="#d0d0d0" stroke-width="2"/>
+      <line x1="13" y1="-13" x2="-13" y2="13" stroke="#d0d0d0" stroke-width="2"/>
+      <circle cx="0" cy="0" r="8" fill="#f0f0f0"/>
+    </g>
+
+    <!-- Subtle reflections on body -->
+    <ellipse cx="400" cy="150" rx="200" ry="8" fill="white" opacity="0.15"/>
+  </g>
+
+  <!-- Elegant Speed Lines -->
+  <g opacity="0.3">
+    <line x1="80" y1="480" x2="140" y2="480" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <line x1="70" y1="510" x2="130" y2="510" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <line x1="75" y1="540" x2="135" y2="540" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- MaSoVa Badge -->
+  <g transform="translate(512, 820)">
+    <rect x="-200" y="-50" width="400" height="100" rx="50" fill="white" opacity="0.95"/>
+    <text x="0" y="20" font-family="Georgia, serif" font-size="64" font-weight="bold" fill="#1a1a1a" text-anchor="middle">MaSoVa</text>
+  </g>
+
+  <!-- Subtle Corner Accent -->
+  <circle cx="880" cy="144" r="60" fill="white" opacity="0.1"/>
+</svg>

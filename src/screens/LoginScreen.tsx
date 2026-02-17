@@ -3,7 +3,7 @@
  * Matches web app design with GPS permission handling
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import {
   Alert,
   ActivityIndicator,
   PermissionsAndroid,
+  Animated,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -40,6 +41,17 @@ const LoginScreen: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(true);
   const [gpsPermission, setGpsPermission] = useState<'granted' | 'denied' | 'unknown'>('unknown');
   const [isCheckingGPS, setIsCheckingGPS] = useState(false);
+
+  // Entrance animation for the login card
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(24)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 400, useNativeDriver: true }),
+    ]).start();
+  }, []);
 
   // Demo credentials
   const demoCredentials = {
@@ -155,10 +167,12 @@ const LoginScreen: React.FC = () => {
         throw new Error(data?.message || data?.error || 'Login failed');
       }
 
-      // Verify user is a driver
-      if (data.user.type !== 'DRIVER') {
-        dispatch(loginFailure('This login is for drivers only. Please contact your manager.'));
-        Alert.alert('Error', 'This login is for drivers only. Please contact your manager.');
+      // Role-based routing is handled by AppNavigator's RoleRouter.
+      // All staff types are accepted: DRIVER, STAFF, MANAGER, ASSISTANT_MANAGER, KIOSK.
+      const allowedTypes = ['DRIVER', 'STAFF', 'MANAGER', 'ASSISTANT_MANAGER', 'KIOSK'];
+      if (!allowedTypes.includes(data.user.type)) {
+        dispatch(loginFailure('This app is for MaSoVa staff only.'));
+        Alert.alert('Access Denied', 'This app is for MaSoVa staff only.');
         return;
       }
 
@@ -199,7 +213,7 @@ const LoginScreen: React.FC = () => {
         </View>
 
         {/* Login Card */}
-        <View style={styles.card}>
+        <Animated.View style={[styles.card, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
           {/* GPS Status */}
           <View style={[
             styles.gpsStatus,
@@ -346,7 +360,7 @@ const LoginScreen: React.FC = () => {
               <Text style={styles.demoButtonText}>Use Demo Driver Account</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Features */}
         <View style={styles.features}>

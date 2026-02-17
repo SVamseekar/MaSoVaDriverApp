@@ -62,6 +62,15 @@ export const colors = {
     delivering: '#2196F3',
     idle: '#FFA726',
   },
+
+  // Role accent colors
+  roles: {
+    driver:           '#00B14F',  // Uber delivery green
+    kitchen:          '#FF6B35',  // Warm orange — heat of the kitchen
+    kiosk:            '#2196F3',  // Calm blue — POS/cashier
+    manager:          '#7B1FA2',  // Deep purple — authority
+    assistantManager: '#FF9800',  // Amber — support role
+  },
 };
 
 // ============================================================================

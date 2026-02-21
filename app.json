@@ -1,4 +1,12 @@
 {
   "name": "MaSoVaDriverApp",
-  "displayName": "MaSoVa Driver"
+  "displayName": "MaSoVa Driver",
+  "expo": {
+    "extra": {
+      "apiUrl": "https://api.masova.app",
+      "eas": {
+        "projectId": "masova-driver"
+      }
+    }
+  }
 }

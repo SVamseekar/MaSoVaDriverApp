@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { driverApi } from './api/driverApi';
 import { orderApi } from './api/orderApi';
 import { deliveryApi } from './api/deliveryApi';
+import { crewApi } from './api/crewApi';
 
 // Slice reducers
 import authReducer from './slices/authSlice';
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   [driverApi.reducerPath]: driverApi.reducer,
   [orderApi.reducerPath]: orderApi.reducer,
   [deliveryApi.reducerPath]: deliveryApi.reducer,
+  [crewApi.reducerPath]: crewApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -40,7 +42,8 @@ export const store = configureStore({
     }).concat(
       driverApi.middleware,
       orderApi.middleware,
-      deliveryApi.middleware
+      deliveryApi.middleware,
+      crewApi.middleware
     ),
   devTools: __DEV__, // Enable Redux DevTools in development
 });

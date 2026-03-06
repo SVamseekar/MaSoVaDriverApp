@@ -7,6 +7,10 @@ import DeliveryHomeScreen from '../screens/DeliveryHomeScreen';
 import ActiveDeliveryScreen from '../screens/ActiveDeliveryScreen';
 import DeliveryHistoryScreen from '../screens/DeliveryHistoryScreen';
 import DriverProfileScreen from '../screens/DriverProfileScreen';
+import MyShiftsScreen from '../screens/shared/MyShiftsScreen';
+import MyScheduleScreen from '../screens/shared/MyScheduleScreen';
+import MyEarningsScreen from '../screens/shared/MyEarningsScreen';
+import MyProfileScreen from '../screens/shared/MyProfileScreen';
 import { colors, components } from '../styles/driverDesignTokens';
 
 const Tab = createBottomTabNavigator();
@@ -68,10 +72,37 @@ export const DriverTabNavigator = () => (
       }}
     />
     <Tab.Screen
-      name="Profile"
-      component={DriverProfileScreen}
+      name="Shifts"
+      component={MyShiftsScreen}
       options={{
-        title: 'Profile',
+        title: 'My Shifts',
+        tabBarLabel: 'Shifts',
+        tabBarIcon: ({ color, size }) => <Icon name="timer" size={size} color={color} />,
+      }}
+    />
+    <Tab.Screen
+      name="Schedule"
+      component={MyScheduleScreen}
+      options={{
+        title: 'Schedule',
+        tabBarLabel: 'Schedule',
+        tabBarIcon: ({ color, size }) => <Icon name="event" size={size} color={color} />,
+      }}
+    />
+    <Tab.Screen
+      name="Earnings"
+      component={MyEarningsScreen}
+      options={{
+        title: 'Earnings',
+        tabBarLabel: 'Earnings',
+        tabBarIcon: ({ color, size }) => <Icon name="payments" size={size} color={color} />,
+      }}
+    />
+    <Tab.Screen
+      name="Profile"
+      component={MyProfileScreen}
+      options={{
+        title: 'My Profile',
         tabBarLabel: 'Profile',
         tabBarIcon: ({ color, size }) => <Icon name="person" size={size} color={color} />,
       }}

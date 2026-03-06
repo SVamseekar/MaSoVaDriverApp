@@ -40,17 +40,10 @@ export const ActiveDeliveryScreen: React.FC = () => {
     pollingInterval: 30000,
   });
 
-  // Filter orders assigned to current driver
-  // Check all possible field names: assignedDriverId, driverId, assignedDriver.id, or assignedDriver (as string)
-  const myDeliveries = activeOrders?.filter((order: any) => {
-    const driverId = user?.id;
-    return (
-      order.assignedDriverId === driverId ||
-      order.driverId === driverId ||
-      order.assignedDriver?.id === driverId ||
-      order.assignedDriver === driverId
-    );
-  }) || [];
+  // Filter orders assigned to current driver (backend uses assignedDriverId)
+  const myDeliveries = activeOrders?.filter((order: any) =>
+    order.assignedDriverId === user?.id
+  ) || [];
 
   const handleMarkDelivered = async (orderId: string, orderNumber: string) => {
     Alert.alert(

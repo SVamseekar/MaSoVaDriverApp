@@ -9,18 +9,14 @@ import { selectIsAuthenticated, selectCurrentUser } from '../store/slices/authSl
 
 // Role navigators
 import DriverTabNavigator from './DriverTabNavigator';
-import KitchenNavigator from './KitchenNavigator';
-import KioskNavigator from './KioskNavigator';
-import ManagerNavigator from './ManagerNavigator';
+import StaffTabNavigator from './StaffTabNavigator';
 
 const RoleRouter = () => {
   const user = useSelector(selectCurrentUser);
   const type = user?.type?.toUpperCase() ?? '';
 
   if (type === 'DRIVER') return <DriverTabNavigator />;
-  if (type === 'KITCHEN_STAFF' || type === 'STAFF') return <KitchenNavigator />;
-  if (type === 'CASHIER' || type === 'KIOSK') return <KioskNavigator />;
-  if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return <ManagerNavigator />;
+  if (['KITCHEN_STAFF', 'STAFF', 'CASHIER', 'KIOSK', 'MANAGER', 'ASSISTANT_MANAGER'].includes(type)) return <StaffTabNavigator />;
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>

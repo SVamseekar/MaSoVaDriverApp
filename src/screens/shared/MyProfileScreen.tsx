@@ -9,8 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { selectCurrentUser } from '../../store/slices/authSlice';
 import { logout } from '../../store/slices/authSlice';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/driverDesignTokens';
-import type { RootState } from '../../store/store';
+import { colors, typography, spacing, borderRadius, shadows, getRoleColor } from '../../styles/driverDesignTokens';
 
 const ROLE_LABELS: Record<string, string> = {
   DRIVER: 'Driver',
@@ -35,13 +34,6 @@ const ROLE_ICONS: Record<string, string> = {
 const MyProfileScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
-  const getRoleColor = (type?: string) => {
-    if (type === 'DRIVER') return colors.roles.driver;
-    if (type === 'KITCHEN_STAFF' || type === 'STAFF') return colors.roles.kitchen;
-    if (type === 'CASHIER' || type === 'KIOSK') return colors.roles.kiosk;
-    if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return colors.roles.manager;
-    return colors.roles.driver;
-  };
   const roleColor = getRoleColor(user?.type);
   const roleLabel = ROLE_LABELS[user?.type ?? ''] ?? user?.type ?? 'Staff';
   const roleIcon = ROLE_ICONS[user?.type ?? ''] ?? 'person';

@@ -6,20 +6,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../store/slices/authSlice';
-import { colors, components } from '../styles/driverDesignTokens';
+import { colors, components, getRoleColor } from '../styles/driverDesignTokens';
 import MyShiftsScreen from '../screens/shared/MyShiftsScreen';
 import MyScheduleScreen from '../screens/shared/MyScheduleScreen';
 import MyEarningsScreen from '../screens/shared/MyEarningsScreen';
 import MyProfileScreen from '../screens/shared/MyProfileScreen';
 
 const Tab = createBottomTabNavigator();
-
-const getRoleColor = (type?: string) => {
-  if (type === 'KITCHEN_STAFF' || type === 'STAFF') return colors.roles.kitchen;
-  if (type === 'CASHIER' || type === 'KIOSK') return colors.roles.kiosk;
-  if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return colors.roles.manager;
-  return colors.roles.driver;
-};
 
 export const StaffTabNavigator = () => {
   const user = useSelector(selectCurrentUser);

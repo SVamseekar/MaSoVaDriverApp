@@ -5,15 +5,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { selectCurrentUser } from '../../store/slices/authSlice';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/driverDesignTokens';
-
-const getRoleColor = (type?: string) => {
-  if (type === 'DRIVER') return colors.roles.driver;
-  if (type === 'KITCHEN_STAFF' || type === 'STAFF') return colors.roles.kitchen;
-  if (type === 'CASHIER' || type === 'KIOSK') return colors.roles.kiosk;
-  if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return colors.roles.manager;
-  return colors.roles.driver;
-};
+import { colors, typography, spacing, borderRadius, shadows, getRoleColor } from '../../styles/driverDesignTokens';
 
 const ComingSoonBadge = ({ label, icon }: { label: string; icon: string }) => (
   <View style={styles.comingSoonCard}>

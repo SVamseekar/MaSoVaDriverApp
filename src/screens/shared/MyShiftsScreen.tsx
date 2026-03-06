@@ -14,16 +14,7 @@ import {
   useClockInMutation,
   useClockOutMutation,
 } from '../../store/api/crewApi';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/driverDesignTokens';
-import type { RootState } from '../../store/store';
-
-const getRoleColor = (type?: string) => {
-  if (type === 'DRIVER') return colors.roles.driver;
-  if (type === 'KITCHEN_STAFF' || type === 'STAFF') return colors.roles.kitchen;
-  if (type === 'CASHIER' || type === 'KIOSK') return colors.roles.kiosk;
-  if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return colors.roles.manager;
-  return colors.roles.driver;
-};
+import { colors, typography, spacing, borderRadius, shadows, getRoleColor } from '../../styles/driverDesignTokens';
 
 const formatDuration = (loginTime: string, logoutTime?: string): string => {
   const start = new Date(loginTime).getTime();
@@ -43,7 +34,7 @@ const formatDate = (iso: string) =>
 const MyShiftsScreen = () => {
   const user = useSelector(selectCurrentUser);
   const roleColor = getRoleColor(user?.type);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   const { data: activeSession, isLoading: sessionLoading, isError: sessionError, refetch: refetchSession } =
     useGetMyActiveSessionQuery(user?.id ?? '', { skip: !user?.id });
@@ -90,9 +81,10 @@ const MyShiftsScreen = () => {
     ]);
   };
 
-  const onRefresh = () => {
-    refetchSession();
-    refetchHistory();
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([refetchSession(), refetchHistory()]);
+    setRefreshing(false);
   };
 
   if (isLoading) {
@@ -107,7 +99,7 @@ const MyShiftsScreen = () => {
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
-      refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={roleColor} />}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={roleColor} />}
     >
       {hasError && (
         <View style={styles.errorBanner}>
@@ -163,7 +155,7 @@ const MyShiftsScreen = () => {
           <Text style={styles.emptyText}>No past sessions found</Text>
         </View>
       ) : (
-        history.map((session, i) => (
+        history.map((session) => (
           <View key={session.id} style={styles.sessionRow}>
             <View style={styles.sessionLeft}>
               <Text style={styles.sessionDate}>{formatDate(session.date)}</Text>

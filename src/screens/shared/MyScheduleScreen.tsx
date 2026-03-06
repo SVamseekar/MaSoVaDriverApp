@@ -1,6 +1,6 @@
 // src/screens/shared/MyScheduleScreen.tsx
 // Upcoming shifts calendar view for all staff roles
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View, Text, ScrollView, StyleSheet,
   ActivityIndicator, RefreshControl,
@@ -9,15 +9,7 @@ import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { selectCurrentUser } from '../../store/slices/authSlice';
 import { useGetMyUpcomingShiftsQuery } from '../../store/api/crewApi';
-import { colors, typography, spacing, borderRadius, shadows } from '../../styles/driverDesignTokens';
-
-const getRoleColor = (type?: string) => {
-  if (type === 'DRIVER') return colors.roles.driver;
-  if (type === 'KITCHEN_STAFF' || type === 'STAFF') return colors.roles.kitchen;
-  if (type === 'CASHIER' || type === 'KIOSK') return colors.roles.kiosk;
-  if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return colors.roles.manager;
-  return colors.roles.driver;
-};
+import { colors, typography, spacing, borderRadius, shadows, getRoleColor } from '../../styles/driverDesignTokens';
 
 const formatShiftDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' });
@@ -43,11 +35,18 @@ const isToday = (iso: string) => {
 const MyScheduleScreen = () => {
   const user = useSelector(selectCurrentUser);
   const roleColor = getRoleColor(user?.type);
+  const [refreshing, setRefreshing] = useState(false);
 
   const { data: shifts = [], isLoading, isError, refetch } = useGetMyUpcomingShiftsQuery(
     { employeeId: user?.id ?? '', storeId: user?.storeId ?? '' },
     { skip: !user?.id }
   );
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   if (isLoading) {
     return (
@@ -71,7 +70,7 @@ const MyScheduleScreen = () => {
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
-      refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} tintColor={roleColor} />}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={roleColor} />}
     >
       <Text style={styles.heading}>Upcoming Shifts</Text>
 

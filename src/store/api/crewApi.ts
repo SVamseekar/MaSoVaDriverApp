@@ -6,18 +6,8 @@ import type { RootState } from '../store';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export interface WorkingSession {
-  id: string;
-  employeeId: string;
-  storeId: string;
-  loginTime: string;
-  logoutTime?: string;
-  totalHours?: number;
-  breakTime?: number;
-  status: 'ACTIVE' | 'COMPLETED' | 'PENDING_APPROVAL';
-  date: string;
-  notes?: string;
-}
+import type { WorkingSession } from '../../types/user';
+export type { WorkingSession };
 
 export interface Shift {
   id: string;

@@ -243,6 +243,18 @@ export const components = {
 };
 
 // ============================================================================
+// ROLE COLOR HELPER — use this everywhere instead of duplicating the logic
+// ============================================================================
+
+export const getRoleColor = (type?: string): string => {
+  if (type === 'DRIVER') return colors.roles.driver;
+  if (type === 'KITCHEN_STAFF' || type === 'STAFF') return colors.roles.kitchen;
+  if (type === 'CASHIER' || type === 'KIOSK') return colors.roles.kiosk;
+  if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return colors.roles.manager;
+  return colors.roles.driver;
+};
+
+// ============================================================================
 // Z-INDEX LAYERS
 // ============================================================================
 

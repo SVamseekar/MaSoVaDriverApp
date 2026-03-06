@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import type { RootState } from '../../store/store';
 import { colors, typography, spacing, borderRadius, shadows } from '../../styles/driverDesignTokens';
 import { API_CONFIG } from '../../config/api.config';
 

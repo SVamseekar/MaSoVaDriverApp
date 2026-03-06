@@ -1,4 +1,4 @@
-package com.masovadriverapp.location
+package com.masovacrew.location
 
 import android.content.BroadcastReceiver
 import android.content.Context

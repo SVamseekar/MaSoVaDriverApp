@@ -90,7 +90,7 @@ const LoginScreen: React.FC = () => {
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
             title: 'Location Permission',
-            message: 'MaSoVa Driver App needs access to your location for delivery tracking',
+            message: 'MaSoVa Crew App needs access to your location for delivery tracking',
             buttonNeutral: 'Ask Me Later',
             buttonNegative: 'Cancel',
             buttonPositive: 'OK',
@@ -208,8 +208,8 @@ const LoginScreen: React.FC = () => {
         {/* Logo & Title */}
         <View style={styles.header}>
           <Icon name="local-shipping" size={80} color={colors.text.inverse} style={styles.logo} />
-          <Text style={styles.title}>MaSoVa Driver</Text>
-          <Text style={styles.subtitle}>Delivery Management System</Text>
+          <Text style={styles.title}>MaSoVa Crew</Text>
+          <Text style={styles.subtitle}>Staff Management System</Text>
         </View>
 
         {/* Login Card */}

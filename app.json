@@ -1,11 +1,11 @@
 {
-  "name": "MaSoVaDriverApp",
-  "displayName": "MaSoVa Driver",
+  "name": "MaSoVaCrewApp",
+  "displayName": "MaSoVa Crew",
   "expo": {
     "extra": {
       "apiUrl": "https://api.masova.app",
       "eas": {
-        "projectId": "masova-driver"
+        "projectId": "masova-crew"
       }
     }
   }

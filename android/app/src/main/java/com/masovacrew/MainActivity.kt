@@ -1,4 +1,4 @@
-package com.masovadriverapp
+package com.masovacrew
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

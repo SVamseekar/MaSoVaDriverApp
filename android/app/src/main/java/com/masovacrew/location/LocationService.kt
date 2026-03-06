@@ -1,4 +1,4 @@
-package com.masovadriverapp.location
+package com.masovacrew.location
 
 import android.app.*
 import android.content.Context
@@ -9,8 +9,8 @@ import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
-import com.masovadriverapp.R
-import com.masovadriverapp.MainActivity
+import com.masovacrew.R
+import com.masovacrew.MainActivity
 
 /**
  * Background Location Service
@@ -41,7 +41,7 @@ class LocationService : Service() {
         const val EXTRA_DRIVER_ID = "EXTRA_DRIVER_ID"
 
         // Location broadcast
-        const val ACTION_LOCATION_UPDATE = "com.masovadriverapp.LOCATION_UPDATE"
+        const val ACTION_LOCATION_UPDATE = "com.masovacrew.LOCATION_UPDATE"
         const val EXTRA_LOCATION = "EXTRA_LOCATION"
     }
 
@@ -98,7 +98,7 @@ class LocationService : Service() {
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("MaSoVa Driver")
+            .setContentTitle("MaSoVa Crew")
             .setContentText("Tracking your location for deliveries")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)

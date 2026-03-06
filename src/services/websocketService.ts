@@ -139,6 +139,8 @@ class WebSocketService {
             }
           },
           reconnectDelay: 5000,
+          forceBinaryWSFrames: false,
+          splitLargeFrames: true,
           heartbeatIncoming: 4000,
           heartbeatOutgoing: 4000,
           onConnect: () => {

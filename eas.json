@@ -5,21 +5,32 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://192.168.50.88:8080",
+        "EXPO_PUBLIC_AGENT_URL": "http://192.168.50.88:8000"
+      }
     },
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.masova.app"
+        "EXPO_PUBLIC_API_URL": "https://api-staging.masova.app",
+        "EXPO_PUBLIC_AGENT_URL": "https://agent-staging.masova.app"
       }
     },
     "production": {
+      "distribution": "store",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.masova.app"
+        "EXPO_PUBLIC_API_URL": "https://api.masova.app",
+        "EXPO_PUBLIC_AGENT_URL": "https://agent.masova.app"
       }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "track": "internal"
+      }
+    }
   }
 }

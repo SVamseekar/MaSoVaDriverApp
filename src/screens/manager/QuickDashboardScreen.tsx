@@ -8,7 +8,8 @@ import { colors } from '../../styles/driverDesignTokens';
 
 interface KPI { label: string; value: string; sub?: string; color: string; }
 
-const API_BASE = 'http://10.0.2.2:8080';
+import { API_CONFIG } from '../../config/api.config';
+const API_BASE = API_CONFIG.API_GATEWAY_URL.replace('/api', '');
 
 const QuickDashboardScreen = () => {
   const user = useSelector(selectCurrentUser);

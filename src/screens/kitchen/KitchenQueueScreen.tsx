@@ -34,7 +34,8 @@ const STATUS_COLORS: Record<string, string> = {
 interface OrderItem { name: string; quantity: number; }
 interface Order { id: string; orderNumber: string; status: string; items: OrderItem[]; orderType: string; createdAt: string; }
 
-const API_BASE = 'http://10.0.2.2:8080'; // Android emulator → localhost
+import { API_CONFIG } from '../../config/api.config';
+const API_BASE = API_CONFIG.API_GATEWAY_URL.replace('/api', '');
 
 const KitchenQueueScreen = () => {
   const user = useSelector(selectCurrentUser);
@@ -73,7 +74,7 @@ const KitchenQueueScreen = () => {
     const nextStatus = STATUS_ORDER[idx + 1];
     try {
       await fetch(`${API_BASE}/api/orders/${orderId}/status`, {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: nextStatus }),
       });

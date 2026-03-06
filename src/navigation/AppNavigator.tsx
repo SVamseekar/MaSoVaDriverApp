@@ -17,8 +17,8 @@ const RoleRouter = () => {
   const type = user?.type?.toUpperCase() ?? '';
 
   if (type === 'DRIVER') return <DriverTabNavigator />;
-  if (type === 'STAFF') return <KitchenNavigator />;
-  if (type === 'KIOSK') return <KioskNavigator />;
+  if (type === 'KITCHEN_STAFF' || type === 'STAFF') return <KitchenNavigator />;
+  if (type === 'CASHIER' || type === 'KIOSK') return <KioskNavigator />;
   if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return <ManagerNavigator />;
 
   // Fallback: kitchen queue for unknown staff types

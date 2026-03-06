@@ -1,6 +1,6 @@
 export interface User {
   id: string;
-  type: 'CUSTOMER' | 'STAFF' | 'DRIVER' | 'MANAGER' | 'ASSISTANT_MANAGER' | 'KIOSK';
+  type: 'CUSTOMER' | 'STAFF' | 'KITCHEN_STAFF' | 'CASHIER' | 'DRIVER' | 'MANAGER' | 'ASSISTANT_MANAGER' | 'KIOSK';
   name: string;
   email: string;
   phone: string;

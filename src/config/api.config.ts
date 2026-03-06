@@ -91,7 +91,7 @@ export const API_ENDPOINTS = {
   // Sessions (Working Hours)
   SESSIONS: {
     BASE: `${GATEWAY}/sessions`,
-    START: `${GATEWAY}/sessions/start`,
+    START: `${GATEWAY}/sessions`,
     END: `${GATEWAY}/sessions/end`,
     BY_ID: (id: string) => `${GATEWAY}/sessions/${id}`,
     BY_EMPLOYEE: (employeeId: string) => `${GATEWAY}/sessions/employee/${employeeId}`,

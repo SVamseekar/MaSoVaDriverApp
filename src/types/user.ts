@@ -13,7 +13,6 @@ export interface User {
   role?: string;
   permissions?: string[];
   generatedPIN?: string;
-  userType?: 'CUSTOMER' | 'STAFF' | 'DRIVER' | 'MANAGER' | 'ASSISTANT_MANAGER';
 }
 
 export interface Address {

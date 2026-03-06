@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../store/slices/authSlice';
+import { RootState } from '../../store/store';
 import { colors } from '../../styles/driverDesignTokens';
 
 const STATUS_ORDER = ['RECEIVED', 'PREPARING', 'OVEN', 'BAKED', 'DISPATCHED'];
@@ -39,22 +40,28 @@ const API_BASE = API_CONFIG.API_GATEWAY_URL.replace('/api', '');
 
 const KitchenQueueScreen = () => {
   const user = useSelector(selectCurrentUser);
+  const token = useSelector((state: RootState) => state.auth.accessToken);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const storeId = user?.storeId ?? '';
 
   const fetchOrders = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
     try {
       const res = await fetch(`${API_BASE}/api/orders/kitchen/queue?storeId=${storeId}`, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });
-      if (res.ok) {
+      if (!res.ok) {
+        setFetchError(`Failed to load queue (${res.status})`);
+      } else {
         const data = await res.json();
         setOrders(Array.isArray(data) ? data : data.content ?? []);
+        setFetchError(null);
       }
     } catch (e) {
+      setFetchError('Network error — check connection');
       console.warn('KDS fetch failed:', e);
     } finally {
       setLoading(false);
@@ -73,11 +80,12 @@ const KitchenQueueScreen = () => {
     if (idx < 0 || idx >= STATUS_ORDER.length - 1) return;
     const nextStatus = STATUS_ORDER[idx + 1];
     try {
-      await fetch(`${API_BASE}/api/orders/${orderId}/status`, {
+      const res = await fetch(`${API_BASE}/api/orders/${orderId}/status`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status: nextStatus }),
       });
+      if (!res.ok) throw new Error(`Status ${res.status}`);
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: nextStatus } : o));
     } catch (e) {
       Alert.alert('Error', 'Failed to update order status');
@@ -135,6 +143,11 @@ const KitchenQueueScreen = () => {
 
   return (
     <View style={styles.container}>
+      {fetchError && (
+        <View style={styles.errorBar}>
+          <Text style={styles.errorBarText}>{fetchError}</Text>
+        </View>
+      )}
       <View style={styles.headerBar}>
         <Text style={styles.headerText}>
           {activeOrders.length} active order{activeOrders.length !== 1 ? 's' : ''}
@@ -167,6 +180,8 @@ const KitchenQueueScreen = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.surface.backgroundAlt },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32 },
+  errorBar: { backgroundColor: colors.semantic.errorBg, padding: 10, alignItems: 'center' },
+  errorBarText: { color: colors.semantic.error, fontSize: 13, fontWeight: '600' },
   headerBar: {
     padding: 16,
     backgroundColor: colors.surface.background,

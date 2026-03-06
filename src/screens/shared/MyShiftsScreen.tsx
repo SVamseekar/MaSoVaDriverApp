@@ -9,14 +9,13 @@ import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { selectCurrentUser } from '../../store/slices/authSlice';
 import {
-  useGetMyActiveSesssionQuery,
+  useGetMyActiveSessionQuery,
   useGetMySessionHistoryQuery,
   useClockInMutation,
   useClockOutMutation,
 } from '../../store/api/crewApi';
 import { colors, typography, spacing, borderRadius, shadows } from '../../styles/driverDesignTokens';
 import type { RootState } from '../../store/store';
-import { useSelector as useRoleColor } from 'react-redux';
 
 const getRoleColor = (type?: string) => {
   if (type === 'DRIVER') return colors.roles.driver;
@@ -46,16 +45,17 @@ const MyShiftsScreen = () => {
   const roleColor = getRoleColor(user?.type);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const { data: activeSession, isLoading: sessionLoading, refetch: refetchSession } =
-    useGetMyActiveSesssionQuery(user?.id ?? '', { skip: !user?.id });
+  const { data: activeSession, isLoading: sessionLoading, isError: sessionError, refetch: refetchSession } =
+    useGetMyActiveSessionQuery(user?.id ?? '', { skip: !user?.id });
 
-  const { data: history = [], isLoading: historyLoading, refetch: refetchHistory } =
+  const { data: history = [], isLoading: historyLoading, isError: historyError, refetch: refetchHistory } =
     useGetMySessionHistoryQuery({ employeeId: user?.id ?? '' }, { skip: !user?.id });
 
   const [clockIn, { isLoading: clockingIn }] = useClockInMutation();
   const [clockOut, { isLoading: clockingOut }] = useClockOutMutation();
 
   const isLoading = sessionLoading || historyLoading;
+  const hasError = sessionError || historyError;
 
   const handleClockIn = async () => {
     if (!user?.id || !user?.storeId) {
@@ -109,6 +109,12 @@ const MyShiftsScreen = () => {
       contentContainerStyle={styles.content}
       refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={roleColor} />}
     >
+      {hasError && (
+        <View style={styles.errorBanner}>
+          <Text style={styles.errorBannerText}>Could not load shift data. Pull to refresh.</Text>
+        </View>
+      )}
+
       {/* Clock In/Out Card */}
       <View style={[styles.clockCard, { borderTopColor: roleColor }]}>
         {activeSession ? (
@@ -243,6 +249,8 @@ const styles = StyleSheet.create({
   sessionHours: { fontSize: typography.fontSize.h2, fontWeight: '800' },
   sessionStatus: { paddingHorizontal: spacing.sm, paddingVertical: 2, borderRadius: borderRadius.full },
   sessionStatusText: { fontSize: 10, fontWeight: '700', textTransform: 'uppercase' },
+  errorBanner: { backgroundColor: colors.semantic.errorBg, padding: spacing.base, borderRadius: borderRadius.sm, marginBottom: spacing.base, alignItems: 'center' },
+  errorBannerText: { color: colors.semantic.error, fontSize: typography.fontSize.caption, fontWeight: '600' },
 });
 
 export default MyShiftsScreen;

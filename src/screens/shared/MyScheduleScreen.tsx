@@ -44,7 +44,7 @@ const MyScheduleScreen = () => {
   const user = useSelector(selectCurrentUser);
   const roleColor = getRoleColor(user?.type);
 
-  const { data: shifts = [], isLoading, refetch } = useGetMyUpcomingShiftsQuery(
+  const { data: shifts = [], isLoading, isError, refetch } = useGetMyUpcomingShiftsQuery(
     { employeeId: user?.id ?? '', storeId: user?.storeId ?? '' },
     { skip: !user?.id }
   );
@@ -53,6 +53,16 @@ const MyScheduleScreen = () => {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={roleColor} />
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.centered}>
+        <Icon name="cloud-off" size={48} color={colors.text.tertiary} />
+        <Text style={styles.emptyTitle}>Could not load schedule</Text>
+        <Text style={styles.emptySubtitle}>Pull to refresh and try again</Text>
       </View>
     );
   }

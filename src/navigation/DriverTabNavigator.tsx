@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import DeliveryHomeScreen from '../screens/DeliveryHomeScreen';
 import ActiveDeliveryScreen from '../screens/ActiveDeliveryScreen';
 import DeliveryHistoryScreen from '../screens/DeliveryHistoryScreen';
-import DriverProfileScreen from '../screens/DriverProfileScreen';
 import MyShiftsScreen from '../screens/shared/MyShiftsScreen';
 import MyScheduleScreen from '../screens/shared/MyScheduleScreen';
 import MyEarningsScreen from '../screens/shared/MyEarningsScreen';

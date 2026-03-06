@@ -35,7 +35,14 @@ const ROLE_ICONS: Record<string, string> = {
 const MyProfileScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
-  const roleColor = colors.roles[(user?.type?.toLowerCase().replace('_staff', '').replace('assistant_', '') as keyof typeof colors.roles)] ?? colors.roles.driver;
+  const getRoleColor = (type?: string) => {
+    if (type === 'DRIVER') return colors.roles.driver;
+    if (type === 'KITCHEN_STAFF' || type === 'STAFF') return colors.roles.kitchen;
+    if (type === 'CASHIER' || type === 'KIOSK') return colors.roles.kiosk;
+    if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return colors.roles.manager;
+    return colors.roles.driver;
+  };
+  const roleColor = getRoleColor(user?.type);
   const roleLabel = ROLE_LABELS[user?.type ?? ''] ?? user?.type ?? 'Staff';
   const roleIcon = ROLE_ICONS[user?.type ?? ''] ?? 'person';
 

@@ -13,7 +13,7 @@ import { Platform } from 'react-native';
 // Physical device: Use your computer's local IP (e.g., 192.168.1.100)
 
 // Your Mac's local IP - UPDATE THIS if your IP changes
-const LOCAL_IP = '192.168.50.41';
+const LOCAL_IP = '192.168.50.88'; // Dell backend host
 
 const getDevApiUrl = () => {
   // Use API Gateway on port 8080 (same as web version)

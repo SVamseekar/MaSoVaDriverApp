@@ -64,8 +64,10 @@ export const crewApi = createApi({
 
     // ── Sessions (clock in/out) ──────────────────────────────────────────────
 
-    getMyActiveSesssion: builder.query<WorkingSession | null, string>({
-      query: (employeeId) => `/sessions/employee/${employeeId}/active`,
+    getMyActiveSession: builder.query<WorkingSession | null, string>({
+      query: (employeeId) => `/sessions/employee/${employeeId}`,
+      transformResponse: (sessions: WorkingSession[]) =>
+        sessions.find(s => s.status === 'ACTIVE') ?? null,
       providesTags: ['Session'],
     }),
 
@@ -109,7 +111,7 @@ export const crewApi = createApi({
 });
 
 export const {
-  useGetMyActiveSesssionQuery,
+  useGetMyActiveSessionQuery,
   useGetMySessionHistoryQuery,
   useClockInMutation,
   useClockOutMutation,

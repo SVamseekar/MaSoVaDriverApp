@@ -9,6 +9,9 @@ import { selectIsAuthenticated, selectCurrentUser } from '../store/slices/authSl
 
 // Role navigators
 import DriverTabNavigator from './DriverTabNavigator';
+import KitchenTabNavigator from './KitchenTabNavigator';
+import CashierTabNavigator from './CashierTabNavigator';
+import ManagerTabNavigator from './ManagerTabNavigator';
 import StaffTabNavigator from './StaffTabNavigator';
 
 const RoleRouter = () => {
@@ -16,7 +19,12 @@ const RoleRouter = () => {
   const type = user?.type?.toUpperCase() ?? '';
 
   if (type === 'DRIVER') return <DriverTabNavigator />;
-  if (['KITCHEN_STAFF', 'STAFF', 'CASHIER', 'KIOSK', 'MANAGER', 'ASSISTANT_MANAGER'].includes(type)) return <StaffTabNavigator />;
+  if (type === 'KITCHEN_STAFF' || type === 'STAFF') return <KitchenTabNavigator />;
+  if (type === 'CASHIER' || type === 'KIOSK') return <CashierTabNavigator />;
+  if (type === 'MANAGER' || type === 'ASSISTANT_MANAGER') return <ManagerTabNavigator />;
+
+  // Fallback for any other authenticated role — shows personal screens
+  if (type) return <StaffTabNavigator />;
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>

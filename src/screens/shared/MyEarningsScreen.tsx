@@ -32,6 +32,7 @@ const MyEarningsScreen = () => {
     data: earnings,
     isLoading,
     isError,
+    error,
     refetch,
   } = useGetMyWeeklyEarningsQuery(
     { employeeId },
@@ -46,7 +47,19 @@ const MyEarningsScreen = () => {
     );
   }
 
-  if (isError || !earnings) {
+  const isNotFound = isError && (error as { status?: number })?.status === 404;
+
+  if (isNotFound || (!isLoading && !isError && !earnings)) {
+    return (
+      <View style={styles.centered}>
+        <Icon name="schedule" size={40} color={colors.text.tertiary} />
+        <Text style={styles.errorText}>No earnings recorded yet this week.</Text>
+        <Text style={styles.retryText} onPress={refetch}>Tap to refresh</Text>
+      </View>
+    );
+  }
+
+  if (isError) {
     return (
       <View style={styles.centered}>
         <Icon name="error-outline" size={40} color={colors.text.tertiary} />

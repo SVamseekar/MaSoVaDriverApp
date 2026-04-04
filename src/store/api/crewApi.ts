@@ -89,9 +89,10 @@ export const crewApi = createApi({
 
     getMyWeeklyEarnings: builder.query<WeeklyEarnings, { employeeId: string; weekStart?: string }>({
       query: ({ employeeId, weekStart }) => {
-        const params = new URLSearchParams({ employeeId });
-        if (weekStart) params.set('weekStart', weekStart);
-        return `/staff/earnings/weekly?${params.toString()}`;
+        const qs = weekStart
+          ? `employeeId=${employeeId}&weekStart=${weekStart}`
+          : `employeeId=${employeeId}`;
+        return `/staff/earnings/weekly?${qs}`;
       },
       providesTags: ['Earnings'],
     }),

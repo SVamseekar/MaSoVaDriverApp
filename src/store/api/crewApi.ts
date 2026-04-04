@@ -1,5 +1,5 @@
 // src/store/api/crewApi.ts
-// Personal staff data — sessions (clock in/out), shifts (schedule), earnings (coming soon)
+// Personal staff data — sessions (clock in/out), shifts (schedule), earnings
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_CONFIG } from '../../config/api.config';
 import type { RootState } from '../store';
@@ -20,21 +20,16 @@ export interface Shift {
   notes?: string;
 }
 
-// Earnings — backend not yet implemented, shape agreed for future
 export interface WeeklyEarnings {
   employeeId: string;
+  storeId: string;
   weekStart: string;
   weekEnd: string;
   hoursWorked: number;
-  baseHourlyRate?: number;          // not yet in backend
-  basePay?: number;                 // not yet in backend
-  tips?: number;                    // not yet in backend — Phase 6 feature
-  totalEarnings?: number;           // not yet in backend
-  dailyBreakdown: Array<{
-    date: string;
-    hours: number;
-    tips?: number;
-  }>;
+  basePayInr: number;
+  tipsInr: number;
+  totalInr: number;
+  hourlyRateInr: number | null;
 }
 
 // ─── API Slice ────────────────────────────────────────────────────────────────
@@ -90,10 +85,20 @@ export const crewApi = createApi({
       providesTags: ['Shift'],
     }),
 
-    // ── Earnings — not yet in backend ───────────────────────────────────────
-    // Endpoint planned for Phase 6. Returns null until implemented.
-    getMyWeeklyEarnings: builder.query<WeeklyEarnings | null, { employeeId: string }>({
-      query: ({ employeeId }) => `/staff/earnings/weekly?employeeId=${employeeId}`,
+    // ── Earnings ────────────────────────────────────────────────────────────
+
+    getMyWeeklyEarnings: builder.query<WeeklyEarnings, { employeeId: string; weekStart?: string }>({
+      query: ({ employeeId, weekStart }) => {
+        const params = new URLSearchParams({ employeeId });
+        if (weekStart) params.set('weekStart', weekStart);
+        return `/staff/earnings/weekly?${params.toString()}`;
+      },
+      providesTags: ['Earnings'],
+    }),
+
+    getMyEarningsHistory: builder.query<WeeklyEarnings[], { employeeId: string; weeks?: number }>({
+      query: ({ employeeId, weeks = 12 }) =>
+        `/staff/earnings/history?employeeId=${employeeId}&weeks=${weeks}`,
       providesTags: ['Earnings'],
     }),
 
@@ -108,4 +113,5 @@ export const {
   useGetMyUpcomingShiftsQuery,
   useGetMyShiftHistoryQuery,
   useGetMyWeeklyEarningsQuery,
+  useGetMyEarningsHistoryQuery,
 } = crewApi;

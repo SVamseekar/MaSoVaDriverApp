@@ -1,52 +1,96 @@
 // src/screens/shared/MyEarningsScreen.tsx
-// Weekly earnings + tips summary — backend not yet implemented (Phase 6)
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import {
+  View, Text, ScrollView, StyleSheet,
+  ActivityIndicator, RefreshControl,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { selectCurrentUser } from '../../store/slices/authSlice';
 import { colors, typography, spacing, borderRadius, shadows, getRoleColor } from '../../styles/driverDesignTokens';
+import { useGetMyWeeklyEarningsQuery } from '../../store/api/crewApi';
 
-const ComingSoonBadge = ({ label, icon }: { label: string; icon: string }) => (
-  <View style={styles.comingSoonCard}>
-    <Icon name={icon} size={32} color={colors.text.tertiary} style={{ marginBottom: spacing.sm }} />
-    <Text style={styles.comingSoonLabel}>{label}</Text>
-    <View style={styles.comingSoonPill}>
-      <Text style={styles.comingSoonPillText}>Coming Soon</Text>
-    </View>
+const fmt = (n: number) => `₹${n.toFixed(2)}`;
+const fmtHours = (n: number) => `${n.toFixed(1)}h`;
+
+const StatCard = ({
+  icon, label, value, accent,
+}: { icon: string; label: string; value: string; accent: string }) => (
+  <View style={[styles.statCard, { borderTopColor: accent }]}>
+    <Icon name={icon} size={24} color={accent} style={{ marginBottom: spacing.xs }} />
+    <Text style={styles.statValue}>{value}</Text>
+    <Text style={styles.statLabel}>{label}</Text>
   </View>
 );
 
 const MyEarningsScreen = () => {
   const user = useSelector(selectCurrentUser);
-  const roleColor = getRoleColor(user?.type);
+  const accent = getRoleColor(user?.type);
+  const employeeId = user?.id ?? '';
+
+  const {
+    data: earnings,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetMyWeeklyEarningsQuery(
+    { employeeId },
+    { skip: !employeeId, pollingInterval: 300000 }
+  );
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={accent} />
+      </View>
+    );
+  }
+
+  if (isError || !earnings) {
+    return (
+      <View style={styles.centered}>
+        <Icon name="error-outline" size={40} color={colors.text.tertiary} />
+        <Text style={styles.errorText}>Could not load earnings.</Text>
+        <Text style={styles.retryText} onPress={refetch}>Tap to retry</Text>
+      </View>
+    );
+  }
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      refreshControl={<RefreshControl refreshing={false} onRefresh={refetch} tintColor={accent} />}
+    >
       <Text style={styles.heading}>My Earnings</Text>
-      <Text style={styles.subheading}>
-        Salary and tips tracking is being set up.{'\n'}
-        Your earnings will appear here soon.
+      <Text style={styles.weekLabel}>
+        {new Date(earnings.weekStart).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+        {' – '}
+        {new Date(earnings.weekEnd).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
       </Text>
 
-      {/* Coming soon cards */}
       <View style={styles.grid}>
-        <ComingSoonBadge label="This Week's Pay" icon="payments" />
-        <ComingSoonBadge label="Tips Received" icon="volunteer-activism" />
-        <ComingSoonBadge label="Hours Worked" icon="schedule" />
-        <ComingSoonBadge label="Monthly Summary" icon="bar-chart" />
+        <StatCard icon="payments"           label="Total This Week"  value={fmt(earnings.totalInr)}        accent={accent} />
+        <StatCard icon="schedule"           label="Hours Worked"     value={fmtHours(earnings.hoursWorked)} accent={accent} />
+        <StatCard icon="account-balance"    label="Base Pay"         value={fmt(earnings.basePayInr)}       accent={accent} />
+        <StatCard icon="volunteer-activism" label="Tips Received"    value={fmt(earnings.tipsInr)}          accent={accent} />
       </View>
 
-      {/* Info banner */}
-      <View style={[styles.infoBanner, { borderLeftColor: roleColor }]}>
-        <Icon name="info" size={20} color={roleColor} />
-        <Text style={styles.infoText}>
-          Earnings tracking requires your store to configure pay rates.
-          Contact your manager to get this set up.
-        </Text>
-      </View>
-
+      {earnings.hourlyRateInr == null ? (
+        <View style={[styles.infoBanner, { borderLeftColor: accent }]}>
+          <Icon name="info" size={20} color={accent} />
+          <Text style={styles.infoText}>
+            Pay rate not configured. Contact your manager to set up your hourly rate.
+          </Text>
+        </View>
+      ) : (
+        <View style={[styles.rateRow, { borderColor: colors.surface.border }]}>
+          <Text style={styles.rateLabel}>Hourly Rate</Text>
+          <Text style={[styles.rateValue, { color: accent }]}>
+            {fmt(earnings.hourlyRateInr)} / hr
+          </Text>
+        </View>
+      )}
     </ScrollView>
   );
 };
@@ -54,42 +98,50 @@ const MyEarningsScreen = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.surface.backgroundAlt },
   content: { padding: spacing.base, paddingBottom: spacing.xxxl },
+  centered: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.sm },
   heading: {
     fontSize: typography.fontSize.h1, fontWeight: '800',
     color: colors.text.primary, marginBottom: spacing.xs,
   },
-  subheading: {
+  weekLabel: {
     fontSize: typography.fontSize.body, color: colors.text.secondary,
-    marginBottom: spacing.xl, lineHeight: 22,
+    marginBottom: spacing.xl,
   },
   grid: {
     flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.lg,
   },
-  comingSoonCard: {
+  statCard: {
     width: '47%', backgroundColor: colors.surface.background,
     borderRadius: borderRadius.md, padding: spacing.base,
-    alignItems: 'center', ...shadows.subtle,
+    alignItems: 'center', borderTopWidth: 3, ...shadows.subtle,
   },
-  comingSoonLabel: {
-    fontSize: typography.fontSize.caption, fontWeight: '600',
-    color: colors.text.secondary, textAlign: 'center', marginBottom: spacing.sm,
+  statValue: {
+    fontSize: typography.fontSize.h2, fontWeight: '700',
+    color: colors.text.primary, marginBottom: 2,
   },
-  comingSoonPill: {
-    backgroundColor: colors.surface.backgroundAlt,
-    paddingHorizontal: spacing.sm, paddingVertical: 3,
-    borderRadius: borderRadius.full,
+  statLabel: {
+    fontSize: typography.fontSize.caption, color: colors.text.secondary, textAlign: 'center',
   },
-  comingSoonPillText: { fontSize: 10, color: colors.text.tertiary, fontWeight: '600' },
   infoBanner: {
     flexDirection: 'row', gap: spacing.sm, alignItems: 'flex-start',
     backgroundColor: colors.surface.background,
     borderRadius: borderRadius.md, padding: spacing.base,
-    borderLeftWidth: 3, ...shadows.subtle,
+    borderLeftWidth: 3, ...shadows.subtle, marginBottom: spacing.base,
   },
   infoText: {
     flex: 1, fontSize: typography.fontSize.caption,
     color: colors.text.secondary, lineHeight: 20,
   },
+  rateRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    backgroundColor: colors.surface.background,
+    borderRadius: borderRadius.md, padding: spacing.base,
+    borderWidth: 1, ...shadows.subtle,
+  },
+  rateLabel: { fontSize: typography.fontSize.body, color: colors.text.secondary },
+  rateValue: { fontSize: typography.fontSize.body, fontWeight: '700' },
+  errorText: { fontSize: typography.fontSize.body, color: colors.text.secondary, marginTop: spacing.sm },
+  retryText: { fontSize: typography.fontSize.caption, color: colors.text.tertiary, marginTop: spacing.xs },
 });
 
 export default MyEarningsScreen;

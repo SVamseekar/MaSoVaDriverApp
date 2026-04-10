@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { colors } from '../../styles/driverDesignTokens';
 import { useGetKitchenOrdersQuery, useAdvanceOrderStageMutation, type KitchenOrder } from '../../store/api/orderApi';
+import { AllergenType, ALLERGEN_SHORT } from '../../constants/allergens';
 
 const ACCENT = colors.roles.kitchen;
 
@@ -80,6 +81,15 @@ export const KitchenQueueScreen = () => {
           {lineItem.customizations ? (
             <Text style={styles.customizations}>{lineItem.customizations}</Text>
           ) : null}
+          {lineItem.allergens && lineItem.allergens.length > 0 && (
+            <View style={styles.allergenRow}>
+              {(lineItem.allergens as AllergenType[]).map((a) => (
+                <View key={a} style={styles.allergenBadge}>
+                  <Text style={styles.allergenBadgeText}>{ALLERGEN_SHORT[a] ?? a}</Text>
+                </View>
+              ))}
+            </View>
+          )}
         </View>
       ))}
 
@@ -140,6 +150,9 @@ const styles = StyleSheet.create({
   lineItem: { marginVertical: 2 },
   lineItemText: { color: colors.text.primary, fontSize: 15 },
   customizations: { color: colors.text.secondary, fontSize: 12, marginLeft: 8 },
+  allergenRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 4 },
+  allergenBadge: { backgroundColor: '#fff3e0', borderWidth: 1, borderColor: '#ff9800', borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2 },
+  allergenBadgeText: { color: '#e65100', fontSize: 10, fontWeight: '700' },
   notes: { color: colors.text.secondary, fontSize: 13, marginTop: 6, fontStyle: 'italic' },
   bumpBtn: {
     backgroundColor: ACCENT, marginTop: 14,

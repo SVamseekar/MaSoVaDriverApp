@@ -11,7 +11,7 @@ export interface KitchenOrder {
   orderType: 'DINE_IN' | 'TAKEAWAY' | 'DELIVERY';
   tableNumber?: number;
   createdAt: string;
-  items: Array<{ name: string; quantity: number; customizations?: string }>;
+  items: Array<{ name: string; quantity: number; customizations?: string; allergens?: string[] }>;
   specialInstructions?: string;
 }
 

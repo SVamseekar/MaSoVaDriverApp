@@ -11,9 +11,12 @@ jest.mock('@react-native-community/netinfo', () => ({
   addEventListener: jest.fn(() => jest.fn()),
 }));
 
-// Mock React Native modules
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+// Mock React Native modules (RN 0.83 moved private helpers)
+jest.mock('react-native/src/private/animated/NativeAnimatedHelper', () => ({}));
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
+  const { EventEmitter } = require('events');
+  return EventEmitter;
+});
 
 // Mock Notifee
 jest.mock('@notifee/react-native', () => ({

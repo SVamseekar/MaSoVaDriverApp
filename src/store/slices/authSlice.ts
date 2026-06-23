@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User } from '../../types/user';
+import { clearTokens, setTokens } from '../../services/secureTokenStorage';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -17,8 +18,6 @@ interface AuthState {
 // ============================================================================
 
 const STORAGE_KEYS = {
-  ACCESS_TOKEN: 'auth_accessToken',
-  REFRESH_TOKEN: 'auth_refreshToken',
   USER: 'auth_user',
 } as const;
 
@@ -53,9 +52,10 @@ const removeStorage = async (key: string): Promise<void> => {
  */
 export const clearAllAuthStorage = async (): Promise<void> => {
   try {
-    await Promise.all(
-      Object.values(STORAGE_KEYS).map(key => removeStorage(key))
-    );
+    await Promise.all([
+      removeStorage(STORAGE_KEYS.USER),
+      clearTokens(),
+    ]);
   } catch (error) {
     console.warn('Storage cleanup failed:', error);
   }
@@ -69,14 +69,6 @@ const loadUserFromStorage = async (): Promise<User | null> => {
   } catch {
     return null;
   }
-};
-
-const loadAccessTokenFromStorage = async (): Promise<string | null> => {
-  return await getStorage(STORAGE_KEYS.ACCESS_TOKEN);
-};
-
-const loadRefreshTokenFromStorage = async (): Promise<string | null> => {
-  return await getStorage(STORAGE_KEYS.REFRESH_TOKEN);
 };
 
 // Initial state - will be hydrated by redux-persist
@@ -113,7 +105,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
 
-      // Storage is handled by redux-persist
+      void setTokens(accessToken, refreshToken);
     },
     loginFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
@@ -122,6 +114,8 @@ const authSlice = createSlice({
       state.refreshToken = null;
       state.user = null;
       state.error = action.payload;
+      void clearTokens();
+      void removeStorage(STORAGE_KEYS.USER);
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -130,9 +124,21 @@ const authSlice = createSlice({
       state.user = null;
       state.loading = false;
       state.error = null;
+      void clearTokens();
+      void removeStorage(STORAGE_KEYS.USER);
     },
     refreshTokenSuccess: (state, action: PayloadAction<string>) => {
       state.accessToken = action.payload;
+      void setTokens(action.payload, state.refreshToken);
+    },
+    hydrateTokens: (
+      state,
+      action: PayloadAction<{ accessToken: string | null; refreshToken: string | null }>
+    ) => {
+      const { accessToken, refreshToken } = action.payload;
+      state.accessToken = accessToken;
+      state.refreshToken = refreshToken;
+      state.isAuthenticated = !!accessToken && !!state.user;
     },
     updateUserProfile: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
@@ -154,6 +160,7 @@ export const {
   loginFailure,
   logout,
   refreshTokenSuccess,
+  hydrateTokens,
   updateUserProfile,
   clearError,
   setLoading,

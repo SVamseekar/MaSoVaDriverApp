@@ -1,7 +1,8 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import { persistStore, persistReducer, createTransform, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setTokens } from '../services/secureTokenStorage';
 
 // API slices
 import { driverApi } from './api/driverApi';
@@ -12,11 +13,37 @@ import { crewApi } from './api/crewApi';
 // Slice reducers
 import authReducer from './slices/authSlice';
 
+interface PersistedAuthState {
+  accessToken?: string | null;
+  refreshToken?: string | null;
+  isAuthenticated?: boolean;
+  user?: unknown;
+  loading?: boolean;
+  error?: string | null;
+  lastLoginAttempt?: string | null;
+}
+
+const stripAuthTokensTransform = createTransform(
+  (inboundState: PersistedAuthState) => {
+    if (inboundState?.accessToken || inboundState?.refreshToken) {
+      void setTokens(inboundState.accessToken ?? null, inboundState.refreshToken ?? null);
+    }
+    return {
+      ...inboundState,
+      accessToken: null,
+      refreshToken: null,
+    };
+  },
+  (outboundState: PersistedAuthState) => outboundState,
+  { whitelist: ['auth'] }
+);
+
 // Persist configuration
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   whitelist: ['auth'], // Only persist auth state
+  transforms: [stripAuthTokensTransform],
 };
 
 const rootReducer = combineReducers({

@@ -9,6 +9,8 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import AppNavigator from './src/navigation/AppNavigator';
 import { store, persistor } from './src/store/store';
+import { hydrateTokens } from './src/store/slices/authSlice';
+import { migrateLegacyTokens } from './src/services/secureTokenStorage';
 import { notificationService } from './src/services/notificationService';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import { colors } from './src/styles/driverDesignTokens';
@@ -53,10 +55,22 @@ function AppWrapper(): React.JSX.Element {
   );
 }
 
+async function bootstrapSecureAuth(): Promise<void> {
+  const tokens = await migrateLegacyTokens();
+  if (tokens.accessToken) {
+    store.dispatch(
+      hydrateTokens({
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+      })
+    );
+  }
+}
+
 function App(): React.JSX.Element {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={null} persistor={persistor} onBeforeLift={bootstrapSecureAuth}>
         <AppWrapper />
       </PersistGate>
     </Provider>

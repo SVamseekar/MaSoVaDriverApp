@@ -20,7 +20,7 @@ const getDevApiUrl = () => {
   // Android emulator: Use 10.0.2.2 to access host machine's localhost
   // Physical device: Use LOCAL_IP
   if (Platform.OS === 'android') {
-    return 'http://10.0.2.2:8080/api';  // API Gateway
+    return `http://${LOCAL_IP}:8080/api`;  // Dell backend via LAN
   }
   // iOS or physical device
   return `http://${LOCAL_IP}:8080/api`;
@@ -30,7 +30,7 @@ const getDevWsUrl = () => {
   // Android emulator: Use 10.0.2.2 to access host machine's localhost
   // Physical device: Use LOCAL_IP
   if (Platform.OS === 'android') {
-    return 'http://10.0.2.2:8090/ws';
+    return `http://${LOCAL_IP}:8090/ws`;  // Dell backend via LAN
   }
   // iOS or physical device
   return `http://${LOCAL_IP}:8090/ws`;

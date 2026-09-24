@@ -9,7 +9,6 @@ import { colors } from '../../styles/driverDesignTokens';
 import {
   useGetTodayAnalyticsQuery,
   useGetRecentOrdersQuery,
-  type TodayAnalytics,
   type RecentOrder,
 } from '../../store/api/orderApi';
 

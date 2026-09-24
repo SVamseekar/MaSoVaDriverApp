@@ -8,7 +8,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import { websocketService } from './websocketService';
-import axios from 'axios';
 
 const QUEUE_STORAGE_KEY = '@masova_offline_queue';
 const MAX_QUEUE_SIZE = 1000; // Maximum items in queue
@@ -213,7 +212,7 @@ class OfflineQueueService {
   /**
    * Process order status update
    */
-  private async processOrderStatusUpdate(payload: any): Promise<boolean> {
+  private async processOrderStatusUpdate(_payload: any): Promise<boolean> {
     try {
       // Implement API call to update order status
       // await orderApi.updateOrderStatus(payload.orderId, payload.status);
@@ -228,7 +227,7 @@ class OfflineQueueService {
   /**
    * Process delivery completion
    */
-  private async processDeliveryComplete(payload: any): Promise<boolean> {
+  private async processDeliveryComplete(_payload: any): Promise<boolean> {
     try {
       // Implement API call to mark delivery complete
       // await orderApi.completeDelivery(payload.orderId);
@@ -243,7 +242,7 @@ class OfflineQueueService {
   /**
    * Process photo upload
    */
-  private async processPhotoUpload(payload: any): Promise<boolean> {
+  private async processPhotoUpload(_payload: any): Promise<boolean> {
     try {
       // Implement photo upload to backend
       // await deliveryApi.uploadProof(payload.orderId, payload.photo);

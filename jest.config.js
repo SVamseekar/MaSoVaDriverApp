@@ -2,7 +2,7 @@ module.exports = {
   preset: 'react-native',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|@react-navigation|@react-native-community|@notifee|@reduxjs/toolkit|react-redux)/)',
+    'node_modules/(?!(react-native|@react-native|@react-navigation|@react-native-community|@notifee|@reduxjs/toolkit|react-redux|immer|react-native-vector-icons|react-native-webview)/)',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverageFrom: [

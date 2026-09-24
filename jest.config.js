@@ -5,6 +5,7 @@ module.exports = {
     'node_modules/(?!(react-native|@react-native|@react-navigation|@react-native-community|@notifee|@reduxjs/toolkit|react-redux|immer|react-native-vector-icons|react-native-webview)/)',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  testPathIgnorePatterns: ['/node_modules/', '/.worktrees/'],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',

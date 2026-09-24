@@ -21,23 +21,6 @@ const STORAGE_KEYS = {
   USER: 'auth_user',
 } as const;
 
-const getStorage = async (key: string): Promise<string | null> => {
-  try {
-    return await AsyncStorage.getItem(key);
-  } catch (error) {
-    console.warn('Storage access denied:', error);
-    return null;
-  }
-};
-
-const setStorage = async (key: string, value: string): Promise<void> => {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (error) {
-    console.warn('Storage write failed:', error);
-  }
-};
-
 const removeStorage = async (key: string): Promise<void> => {
   try {
     await AsyncStorage.removeItem(key);
@@ -58,16 +41,6 @@ export const clearAllAuthStorage = async (): Promise<void> => {
     ]);
   } catch (error) {
     console.warn('Storage cleanup failed:', error);
-  }
-};
-
-// Load functions
-const loadUserFromStorage = async (): Promise<User | null> => {
-  try {
-    const userStr = await getStorage(STORAGE_KEYS.USER);
-    return userStr ? JSON.parse(userStr) : null;
-  } catch {
-    return null;
   }
 };
 

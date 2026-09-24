@@ -18,12 +18,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootState } from '../store/store';
 import { useGetDriverPerformanceQuery, useUpdateDriverLocationMutation } from '../store/api/driverApi';
 import { websocketService } from '../services/websocketService';
 import { locationService, Location } from '../services/locationService';
-import { notificationService } from '../services/notificationService';
 import { backgroundLocationService } from '../services/backgroundLocationService';
 import { offlineQueueService, QueueActionType } from '../services/offlineQueueService';
 import { MetricCard, ActionButton } from '../components/shared';
@@ -38,7 +36,7 @@ interface DeliveryHomeScreenProps {
 
 export const DeliveryHomeScreen: React.FC<DeliveryHomeScreenProps> = ({
   isOnline,
-  setIsOnline,
+  setIsOnline: _setIsOnline,
   setActiveDeliveries,
 }) => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -48,14 +46,14 @@ export const DeliveryHomeScreen: React.FC<DeliveryHomeScreenProps> = ({
   const [isUsingFallback, setIsUsingFallback] = useState(false);
   const [locationError, setLocationError] = useState<string>('');
   const [locationMode, setLocationMode] = useState<'auto' | 'manual'>('auto');
-  const [sessionStartTime, setSessionStartTime] = useState<Date | null>(null);
+  const [sessionStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState('00:00:00');
   const [refreshing, setRefreshing] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
 
   // Fetch real driver performance data
   const today = new Date().toISOString().split('T')[0];
-  const { data: performanceData, isLoading: isLoadingPerformance, refetch } = useGetDriverPerformanceQuery(
+  const { data: performanceData, refetch } = useGetDriverPerformanceQuery(
     {
       driverId: user?.id || '',
       startDate: today,
@@ -293,11 +291,15 @@ export const DeliveryHomeScreen: React.FC<DeliveryHomeScreenProps> = ({
         websocketService.disconnect();
       }
     };
+    // Prop and service callbacks are stable for this session; listing them retriggers GPS.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnline, user?.id, locationMode]);
 
   // Initialize location on mount
   useEffect(() => {
     getCurrentLocation();
+    // Mount-only. getCurrentLocation closes over the latest setters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRefresh = async () => {

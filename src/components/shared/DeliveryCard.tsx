@@ -23,7 +23,6 @@ interface DeliveryCardProps {
 export const DeliveryCard: React.FC<DeliveryCardProps> = ({
   delivery,
   onPress,
-  showActions = false,
 }) => {
   const getStatusColor = (status: string) => {
     switch (status) {

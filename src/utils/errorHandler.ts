@@ -191,7 +191,7 @@ class ErrorHandler {
   /**
    * Report error to monitoring service (Sentry)
    */
-  private reportToSentry(error: AppError): void {
+  private reportToSentry(_error: AppError): void {
     // TODO: Implement Sentry reporting
     // Sentry.captureException(error.originalError, {
     //   tags: {

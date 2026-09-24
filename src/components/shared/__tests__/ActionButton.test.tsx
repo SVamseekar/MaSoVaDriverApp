@@ -8,14 +8,14 @@ import { ActionButton } from '../ActionButton';
 
 describe('ActionButton', () => {
   it('should render correctly', () => {
-    const { getByText } = render(<ActionButton>Test Button</ActionButton>);
+    const { getByText } = render(<ActionButton title="Test Button" onPress={jest.fn()} />);
     expect(getByText('Test Button')).toBeTruthy();
   });
 
   it('should handle press events', () => {
     const onPressMock = jest.fn();
     const { getByText } = render(
-      <ActionButton onPress={onPressMock}>Click Me</ActionButton>
+      <ActionButton title="Click Me" onPress={onPressMock} />
     );
 
     fireEvent.press(getByText('Click Me'));
@@ -24,73 +24,61 @@ describe('ActionButton', () => {
 
   it('should render primary variant', () => {
     const { getByText } = render(
-      <ActionButton variant="primary">Primary</ActionButton>
+      <ActionButton title="Primary" variant="primary" onPress={jest.fn()} />
     );
     expect(getByText('Primary')).toBeTruthy();
   });
 
   it('should render secondary variant', () => {
     const { getByText } = render(
-      <ActionButton variant="secondary">Secondary</ActionButton>
+      <ActionButton title="Secondary" variant="secondary" onPress={jest.fn()} />
     );
     expect(getByText('Secondary')).toBeTruthy();
   });
 
   it('should render outline variant', () => {
     const { getByText } = render(
-      <ActionButton variant="outline">Outline</ActionButton>
+      <ActionButton title="Outline" variant="outline" onPress={jest.fn()} />
     );
     expect(getByText('Outline')).toBeTruthy();
   });
 
   it('should render danger variant', () => {
     const { getByText } = render(
-      <ActionButton variant="danger">Danger</ActionButton>
+      <ActionButton title="Danger" variant="danger" onPress={jest.fn()} />
     );
     expect(getByText('Danger')).toBeTruthy();
   });
 
   it('should show loading indicator when loading', () => {
-    const { getByTestId, queryByText } = render(
-      <ActionButton loading>Loading</ActionButton>
+    const { queryByText } = render(
+      <ActionButton title="Loading" loading onPress={jest.fn()} />
     );
 
-    // Button text should not be visible when loading
     expect(queryByText('Loading')).toBeNull();
   });
 
   it('should be disabled when disabled prop is true', () => {
     const onPressMock = jest.fn();
     const { getByText } = render(
-      <ActionButton disabled onPress={onPressMock}>
-        Disabled
-      </ActionButton>
+      <ActionButton title="Disabled" disabled onPress={onPressMock} />
     );
 
     fireEvent.press(getByText('Disabled'));
-    // Should not call onPress when disabled
     expect(onPressMock).not.toHaveBeenCalled();
   });
 
   it('should apply fullWidth style', () => {
     const { getByText } = render(
-      <ActionButton fullWidth>Full Width</ActionButton>
+      <ActionButton title="Full Width" fullWidth onPress={jest.fn()} />
     );
     expect(getByText('Full Width')).toBeTruthy();
   });
 
-  it('should render with start icon', () => {
+  it('should render with an icon', () => {
     const mockIcon = <>{/* Mock icon */}</>;
     const { getByText } = render(
-      <ActionButton startIcon={mockIcon}>With Icon</ActionButton>
-    );
-    expect(getByText('With Icon')).toBeTruthy();
-  });
-
-  it('should render with end icon', () => {
-    const mockIcon = <>{/* Mock icon */}</>;
-    const { getByText } = render(
-      <ActionButton endIcon={mockIcon}>With Icon</ActionButton>
+      <ActionButton title="With Icon" icon={mockIcon} onPress={jest.fn()} />
     );
     expect(getByText('With Icon')).toBeTruthy();
   });

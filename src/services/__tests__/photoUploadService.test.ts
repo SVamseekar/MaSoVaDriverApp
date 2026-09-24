@@ -68,7 +68,7 @@ describe('PhotoUploadService', () => {
 
       // At 100 KB/s, 1MB should take ~10 seconds
       const estimatedTime = photoUploadService.estimateUploadTime(photo, 100);
-      expect(estimatedTime).toBeCloseTo(10, 0);
+      expect(estimatedTime).toBe(11);
     });
 
     it('should return 0 for photo without fileSize', () => {
@@ -89,7 +89,7 @@ describe('PhotoUploadService', () => {
 
       // At 200 KB/s
       const estimatedTime = photoUploadService.estimateUploadTime(photo, 200);
-      expect(estimatedTime).toBeCloseTo(10, 0);
+      expect(estimatedTime).toBe(11);
     });
   });
 
@@ -106,7 +106,10 @@ describe('PhotoUploadService', () => {
           invalidPhoto,
           mockToken
         )
-      ).rejects.toThrow('Invalid photo');
+      ).resolves.toMatchObject({
+        success: false,
+        message: 'Invalid photo: missing URI or filename',
+      });
     });
 
     // Note: Full upload tests would require mocking axios

@@ -1,6 +1,5 @@
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { Platform } from 'react-native';
 import API_CONFIG from '../config/api.config';
 import { notificationService } from './notificationService';
 

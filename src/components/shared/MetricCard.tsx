@@ -16,7 +16,6 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   value,
   icon,
   trend,
-  trendValue,
   variant = 'default',
 }) => {
   const getVariantColor = () => {

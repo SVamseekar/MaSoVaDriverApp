@@ -81,6 +81,8 @@ export const orderApi = createApi({
     // Existing endpoints
     getOrdersByStatus: builder.query({
       query: (status: string) => `/orders?status=${encodeURIComponent(status)}`,
+      transformResponse: (res: { content: unknown[] } | unknown[]) =>
+        Array.isArray(res) ? res : res.content,
       providesTags: ['Orders'],
     }),
     updateOrderStatus: builder.mutation({

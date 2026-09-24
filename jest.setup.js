@@ -1,3 +1,4 @@
+/* eslint-env jest */
 // Jest setup file for React Native Testing Library
 
 // Mock AsyncStorage
@@ -11,12 +12,9 @@ jest.mock('@react-native-community/netinfo', () => ({
   addEventListener: jest.fn(() => jest.fn()),
 }));
 
-// Mock React Native modules (RN 0.83 moved private helpers)
-jest.mock('react-native/src/private/animated/NativeAnimatedHelper', () => ({}));
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
-  const { EventEmitter } = require('events');
-  return EventEmitter;
-});
+// RN 0.83 still ships this module. Automock it; a Node EventEmitter
+// substitute drops TouchableOpacity children in tests.
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 
 // Mock Notifee
 jest.mock('@notifee/react-native', () => ({

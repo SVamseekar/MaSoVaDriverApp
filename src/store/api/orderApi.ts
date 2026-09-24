@@ -80,13 +80,13 @@ export const orderApi = createApi({
   endpoints: (builder) => ({
     // Existing endpoints
     getOrdersByStatus: builder.query({
-      query: (status: string) => `/orders/status/${status}`,
+      query: (status: string) => `/orders?status=${encodeURIComponent(status)}`,
       providesTags: ['Orders'],
     }),
     updateOrderStatus: builder.mutation({
       query: ({ orderId, status }: { orderId: string; status: string }) => ({
         url: `/orders/${orderId}/status`,
-        method: 'PATCH',
+        method: 'POST',
         body: { status },
       }),
       invalidatesTags: ['Orders'],

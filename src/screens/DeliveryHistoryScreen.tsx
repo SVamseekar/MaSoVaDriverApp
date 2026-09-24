@@ -39,7 +39,7 @@ export const DeliveryHistoryScreen: React.FC = () => {
   const { filteredDeliveries, groupedDeliveries } = useMemo(() => {
     const myDeliveries =
       deliveredOrders?.filter(
-        (order: any) => order.assignedDriver?.id === user?.id || order.assignedDriver === user?.id
+        (order: any) => order.assignedDriverId === user?.id
       ) || [];
 
     // Apply time filter

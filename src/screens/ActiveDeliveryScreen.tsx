@@ -3,7 +3,7 @@
  * Clean delivery cards with modern layout and actions
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -13,13 +13,12 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
-  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { useGetOrdersByStatusQuery, useUpdateOrderStatusMutation } from '../store/api/orderApi';
-import { cameraService, CapturedImage } from '../services/cameraService';
+import { cameraService } from '../services/cameraService';
 import { notificationService } from '../services/notificationService';
 import { photoUploadService } from '../services/photoUploadService';
 import { offlineQueueService, QueueActionType } from '../services/offlineQueueService';
@@ -32,11 +31,11 @@ export const ActiveDeliveryScreen: React.FC = () => {
   const { user, accessToken } = useSelector((state: RootState) => state.auth);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [refreshing, setRefreshing] = useState(false);
-  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [, setUploadingPhoto] = useState(false);
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
 
   // Fetch orders assigned to this driver with status DISPATCHED
-  const { data: activeOrders, isLoading, error, refetch } = useGetOrdersByStatusQuery('DISPATCHED', {
+  const { data: activeOrders, isLoading, refetch } = useGetOrdersByStatusQuery('DISPATCHED', {
     pollingInterval: 30000,
   });
 

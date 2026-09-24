@@ -4,6 +4,8 @@
  * Tracks app performance metrics for optimization.
  */
 
+import React from 'react';
+
 export interface PerformanceMetrics {
   screenName: string;
   renderTime: number;
@@ -116,7 +118,7 @@ export function withPerformanceTracking<P extends object>(
     }
 
     render() {
-      return <Component {...this.props} />;
+      return React.createElement(Component, this.props);
     }
   };
 }

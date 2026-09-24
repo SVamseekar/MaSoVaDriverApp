@@ -26,8 +26,8 @@ import { colors, spacing, typography, borderRadius, shadows } from '../styles/dr
 export const DriverProfileScreen: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
-  const [sessionDuration, setSessionDuration] = useState('00:00:00');
-  const [sessionProgress, setSessionProgress] = useState(0);
+  const [, setSessionDuration] = useState('00:00:00');
+  const [, setSessionProgress] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
   // Fetch driver performance data

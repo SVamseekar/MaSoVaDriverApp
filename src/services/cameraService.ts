@@ -245,7 +245,7 @@ class CameraService {
    */
   async compressImage(
     image: CapturedImage,
-    quality: number = 0.7
+    _quality: number = 0.7
   ): Promise<CapturedImage> {
     // This would require additional library like react-native-image-resizer
     // For now, return as-is

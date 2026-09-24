@@ -51,6 +51,8 @@ const LoginScreen: React.FC = () => {
       Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }),
       Animated.timing(slideAnim, { toValue: 0, duration: 400, useNativeDriver: true }),
     ]).start();
+    // Animated values come from useRef and stay stable for this mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Demo credentials

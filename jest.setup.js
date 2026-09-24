@@ -40,6 +40,14 @@ jest.mock('@react-native-community/geolocation', () => ({
 }));
 
 // Mock native modules
+jest.mock('react-native-webview', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  return {
+    WebView: (props) => React.createElement(View, props),
+  };
+});
+
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native');
   RN.NativeModules.BackgroundLocationModule = {

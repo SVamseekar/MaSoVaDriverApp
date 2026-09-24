@@ -37,7 +37,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     } else {
       pulseAnim.setValue(1);
     }
-  }, [status, showPulse]);
+  }, [status, showPulse, pulseAnim]);
 
   const getStatusColor = () => {
     switch (status) {

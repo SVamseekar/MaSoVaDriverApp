@@ -54,7 +54,7 @@ describe('orderApi commerce contract', () => {
 
   beforeEach(() => {
     fetchMock.mockReset();
-    global.fetch = fetchMock as unknown as typeof fetch;
+    globalThis.fetch = fetchMock as unknown as typeof fetch;
   });
 
   it('lists orders with GET /orders?status=DISPATCHED', async () => {

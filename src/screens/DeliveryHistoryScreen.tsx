@@ -70,7 +70,7 @@ export const DeliveryHistoryScreen: React.FC = () => {
     });
 
     // Group by date
-    const grouped = filtered.reduce((groups: any, order: any) => {
+    const grouped = filtered.reduce((groups: Record<string, any[]>, order: any) => {
       const date = new Date(order.deliveredAt || order.updatedAt);
       const dateKey = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -79,7 +79,7 @@ export const DeliveryHistoryScreen: React.FC = () => {
       }
       groups[dateKey].push(order);
       return groups;
-    }, {});
+    }, {} as Record<string, any[]>);
 
     return { filteredDeliveries: filtered, groupedDeliveries: grouped };
   }, [deliveredOrders, user?.id, timeFilter, searchQuery]);

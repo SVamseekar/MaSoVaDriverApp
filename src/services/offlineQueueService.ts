@@ -32,7 +32,7 @@ export interface QueueItem {
 class OfflineQueueService {
   private queue: QueueItem[] = [];
   private isProcessing: boolean = false;
-  private syncInterval: NodeJS.Timeout | null = null;
+  private syncInterval: ReturnType<typeof setInterval> | null = null;
   private isOnline: boolean = true;
 
   constructor() {

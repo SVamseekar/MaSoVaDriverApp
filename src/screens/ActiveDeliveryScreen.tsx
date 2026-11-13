@@ -3,7 +3,7 @@
  * Clean delivery cards with modern layout and actions
  */
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -17,7 +17,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { useGetOrdersByStatusQuery, useUpdateOrderStatusMutation } from '../store/api/orderApi';
+import { getOrderId, useGetOrdersByStatusQuery, useUpdateOrderStatusMutation } from '../store/api/orderApi';
 import { cameraService } from '../services/cameraService';
 import { notificationService } from '../services/notificationService';
 import { photoUploadService } from '../services/photoUploadService';
@@ -40,9 +40,17 @@ export const ActiveDeliveryScreen: React.FC = () => {
   });
 
   // Filter orders assigned to current driver (backend uses assignedDriverId)
-  const myDeliveries = activeOrders?.filter((order: any) =>
-    order.assignedDriverId === user?.id
-  ) || [];
+  const myDeliveries = useMemo(() => {
+    const mine = activeOrders?.filter(order => order.assignedDriverId === user?.id) ?? [];
+    const withId = mine.filter(order => getOrderId(order));
+    if (withId.length !== mine.length) {
+      console.error(
+        `ActiveDeliveryScreen: dropped ${mine.length - withId.length} assigned order(s) with no id/_id`,
+        mine.filter(order => !getOrderId(order)).map(order => order.orderNumber ?? '(no order number)')
+      );
+    }
+    return withId;
+  }, [activeOrders, user?.id]);
 
   const handleMarkDelivered = async (orderId: string, orderNumber: string) => {
     Alert.alert(
@@ -239,18 +247,18 @@ export const ActiveDeliveryScreen: React.FC = () => {
       {viewMode === 'list' ? (
         <FlatList
           data={myDeliveries}
-          keyExtractor={(item) => item.id || item._id}
+          keyExtractor={(item) => getOrderId(item)}
           renderItem={({ item: order }) => {
             const rawAddress = order.deliveryAddress;
             const customerAddress = formatAddress(rawAddress);
             // Customer data is flat on order object, not nested
             const customerPhone = order.customerPhone || 'Phone not provided';
             const customerName = order.customerName || 'Customer';
-            const orderNumber = order.orderNumber || (order.id || order._id).slice(-6).toUpperCase();
+            const orderNumber = order.orderNumber || getOrderId(order).slice(-6).toUpperCase();
 
             // Format delivery object for DeliveryCard
             const delivery = {
-              id: order.id || order._id,
+              id: getOrderId(order),
               orderNumber: orderNumber,
               customerName: customerName,
               customerAddress: customerAddress,
@@ -265,7 +273,7 @@ export const ActiveDeliveryScreen: React.FC = () => {
             return (
               <DeliveryCard
                 delivery={delivery}
-                onPress={() => handleMarkDelivered(order.id || order._id, orderNumber)}
+                onPress={() => handleMarkDelivered(getOrderId(order), orderNumber)}
                 showActions={true}
               />
             );

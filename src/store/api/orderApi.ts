@@ -15,6 +15,27 @@ export interface KitchenOrder {
   specialInstructions?: string;
 }
 
+export interface DeliveryOrder {
+  id?: string;
+  _id?: string;
+  orderNumber?: string;
+  status?: string;
+  assignedDriverId?: string;
+  customerName?: string;
+  customerPhone?: string;
+  customer?: { name?: string; phone?: string };
+  deliveryAddress?: unknown;
+  items?: Array<{ name?: string; quantity?: number; price?: number }>;
+  estimatedDeliveryTime?: string;
+  total?: number;
+  totalAmount?: number;
+  deliveredAt?: string;
+  updatedAt?: string;
+}
+
+/** Orders arrive with either `id` or Mongo `_id`; empty string if neither is present. */
+export const getOrderId = (order: DeliveryOrder): string => order.id ?? order._id ?? '';
+
 export interface MenuItem {
   id: string;
   name: string;
@@ -79,9 +100,9 @@ export const orderApi = createApi({
   tagTypes: ['Orders'],
   endpoints: (builder) => ({
     // Existing endpoints
-    getOrdersByStatus: builder.query({
+    getOrdersByStatus: builder.query<DeliveryOrder[], string>({
       query: (status: string) => `/orders?status=${encodeURIComponent(status)}`,
-      transformResponse: (res: { content: unknown[] } | unknown[]) =>
+      transformResponse: (res: { content: DeliveryOrder[] } | DeliveryOrder[]) =>
         Array.isArray(res) ? res : res.content,
       providesTags: ['Orders'],
     }),

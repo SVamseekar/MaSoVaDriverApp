@@ -52,13 +52,13 @@
 
 ### Android:
 ```bash
-cd /Users/souravamseekarmarti/Projects/MaSoVaDriverApp
+cd ~/Projects/MaSoVaCrewApp
 npx react-native run-android
 ```
 
 ### iOS (requires Mac):
 ```bash
-cd /Users/souravamseekarmarti/Projects/MaSoVaDriverApp
+cd ~/Projects/MaSoVaCrewApp
 cd ios && pod install && cd ..
 npx react-native run-ios
 ```

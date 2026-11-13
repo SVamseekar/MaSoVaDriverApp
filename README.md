@@ -309,7 +309,7 @@ npm run android
 
 ## 📚 Documentation
 
-- [README_SETUP.md](./README_SETUP.md) - Project setup guide
+- [README_SETUP.md](./docs/SETUP.md) - Project setup guide
 - [PHASE_2_COMPLETE.md](./PHASE_2_COMPLETE.md) - Core UI & state management
 - [PHASE_3_COMPLETE.md](./PHASE_3_COMPLETE.md) - Native modules integration
 - [PHASE_4_COMPLETE.md](./PHASE_4_COMPLETE.md) - Advanced features (background GPS, offline queue, photo upload)

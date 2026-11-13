@@ -3,7 +3,7 @@
  * Migrated from web DeliveryHomePage with React Native components
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 import { RootState } from '../store/store';
 import { useGetDriverPerformanceQuery, useUpdateDriverLocationMutation } from '../store/api/driverApi';
 import { websocketService } from '../services/websocketService';
@@ -27,26 +28,44 @@ import { offlineQueueService, QueueActionType } from '../services/offlineQueueSe
 import { MetricCard, ActionButton } from '../components/shared';
 import { LocationMapModal } from '../components/LocationMapModal';
 import { colors, spacing, borderRadius, typography, shadows } from '../styles/driverDesignTokens';
+import { useGetMyActiveSessionQuery } from '../store/api/crewApi';
 
-interface DeliveryHomeScreenProps {
-  isOnline: boolean;
-  setIsOnline: (value: boolean) => void;
-  setActiveDeliveries: (value: number) => void;
-}
-
-export const DeliveryHomeScreen: React.FC<DeliveryHomeScreenProps> = ({
-  isOnline,
-  setIsOnline: _setIsOnline,
-  setActiveDeliveries,
-}) => {
+export const DeliveryHomeScreen: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+  // The tab navigator mounts this screen without props, so "online" comes from the
+  // driver's active clock-in session (started by the manager), as the offline hint says.
+  const {
+    data: activeSession,
+    isLoading: isCheckingSession,
+    isError: sessionCheckFailed,
+    refetch: refetchSession,
+  } = useGetMyActiveSessionQuery(user?.id ?? '', {
+    skip: !user?.id,
+    pollingInterval: 30000,
+  });
+  const isOnline = Boolean(activeSession);
+
+  // Re-check clock-in state whenever the driver returns to this tab, not only on the poll.
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.id) refetchSession();
+    }, [user?.id, refetchSession])
+  );
+
+  // Close the realtime connection when the session ends (the tracking effect below only runs while online).
+  useEffect(() => {
+    if (!isOnline) websocketService.disconnect();
+  }, [isOnline]);
 
   const [location, setLocation] = useState<Location | null>(null);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [isUsingFallback, setIsUsingFallback] = useState(false);
   const [locationError, setLocationError] = useState<string>('');
   const [locationMode, setLocationMode] = useState<'auto' | 'manual'>('auto');
-  const [sessionStartTime] = useState<Date | null>(null);
+  const sessionStartTime = useMemo(
+    () => (activeSession?.loginTime ? new Date(activeSession.loginTime) : null),
+    [activeSession?.loginTime]
+  );
   const [elapsedTime, setElapsedTime] = useState('00:00:00');
   const [refreshing, setRefreshing] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
@@ -272,8 +291,6 @@ export const DeliveryHomeScreen: React.FC<DeliveryHomeScreenProps> = ({
       user.id,
       (newOrder) => {
         console.log('New order received:', newOrder.orderNumber);
-        // Optionally refresh active deliveries count
-        setActiveDeliveries(prev => prev + 1);
       }
     );
 
@@ -287,9 +304,6 @@ export const DeliveryHomeScreen: React.FC<DeliveryHomeScreenProps> = ({
       }
 
       unsubscribeOrders();
-      if (!isOnline) {
-        websocketService.disconnect();
-      }
     };
     // Prop and service callbacks are stable for this session; listing them retriggers GPS.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -396,7 +410,18 @@ export const DeliveryHomeScreen: React.FC<DeliveryHomeScreenProps> = ({
         {!isOnline && (
           <View style={styles.gpsStatusRow}>
             <Icon name="place" size={20} color={colors.text.secondary} />
-            <Text style={styles.gpsOfflineText}>GPS tracking will start when manager clocks you in</Text>
+            <Text style={styles.gpsOfflineText}>
+              {sessionCheckFailed
+                ? "Couldn't check your clock-in status"
+                : isCheckingSession
+                  ? 'Checking clock-in status…'
+                  : 'GPS tracking will start when manager clocks you in'}
+            </Text>
+            {sessionCheckFailed && (
+              <TouchableOpacity onPress={() => refetchSession()} accessibilityLabel="Retry clock-in check">
+                <Icon name="refresh" size={20} color={colors.text.primary} />
+              </TouchableOpacity>
+            )}
           </View>
         )}
 

@@ -133,8 +133,7 @@ class ErrorHandler {
       error?.message?.includes('network') ||
       error?.message?.includes('ECONNABORTED') ||
       error?.code === 'ECONNABORTED' ||
-      error?.code === 'ETIMEDOUT' ||
-      !navigator.onLine
+      error?.code === 'ETIMEDOUT'
     );
   }
 
@@ -181,7 +180,7 @@ class ErrorHandler {
         console.log(`Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms`);
 
         // Wait before retrying
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise<void>(resolve => setTimeout(resolve, delay));
       }
     }
 

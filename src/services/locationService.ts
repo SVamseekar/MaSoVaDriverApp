@@ -11,6 +11,9 @@ export interface Location {
   latitude: number;
   longitude: number;
   accuracy?: number;
+  altitude?: number;
+  speed?: number;
+  heading?: number;
   timestamp?: number;
 }
 
@@ -25,7 +28,7 @@ export interface LocationUpdate {
 
 class LocationService {
   private watchId: number | null = null;
-  private updateInterval: NodeJS.Timeout | null = null;
+  private updateInterval: ReturnType<typeof setInterval> | null = null;
   private currentLocation: Location | null = null;
   private onLocationUpdate: ((location: Location) => void) | null = null;
 

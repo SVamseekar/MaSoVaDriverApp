@@ -49,9 +49,14 @@ export const QuickOrderScreen = () => {
       return;
     }
 
+    if (!user?.storeId) {
+      Alert.alert('Error', 'No store is assigned to your account');
+      return;
+    }
+
     try {
       const result = await placeStaffOrder({
-        storeId: user!.storeId,
+        storeId: user.storeId,
         customerName: customerName.trim(),
         orderType,
         tableNumber: orderType === 'DINE_IN' ? tableNumber.trim() : undefined,

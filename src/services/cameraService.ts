@@ -9,8 +9,17 @@ import {
   CameraOptions,
   ImagePickerResponse,
   Asset,
+  ImageLibraryOptions,
+  PhotoQuality,
 } from 'react-native-image-picker';
 import { Platform, PermissionsAndroid, Alert } from 'react-native';
+
+// The picker only accepts quality in 0.1 steps between 0 and 1.
+// Falls back to 0.8 for missing, zero or non-finite input, as the old `quality || 0.8` did.
+const toPhotoQuality = (quality?: number): PhotoQuality => {
+  const q = quality && Number.isFinite(quality) ? quality : 0.8;
+  return (Math.round(Math.min(1, Math.max(0, q)) * 10) / 10) as PhotoQuality;
+};
 
 export interface CapturedImage {
   uri: string;
@@ -70,7 +79,7 @@ class CameraService {
 
     const cameraOptions: CameraOptions = {
       mediaType: 'photo',
-      quality: options?.quality || 0.8,
+      quality: toPhotoQuality(options?.quality),
       maxWidth: options?.maxWidth || 1920,
       maxHeight: options?.maxHeight || 1080,
       includeBase64: options?.includeBase64 || false,
@@ -112,9 +121,9 @@ class CameraService {
     maxWidth?: number;
     maxHeight?: number;
   }): Promise<CapturedImage | null> {
-    const cameraOptions: CameraOptions = {
+    const cameraOptions: ImageLibraryOptions = {
       mediaType: 'photo',
-      quality: options?.quality || 0.8,
+      quality: toPhotoQuality(options?.quality),
       maxWidth: options?.maxWidth || 1920,
       maxHeight: options?.maxHeight || 1080,
       includeBase64: options?.includeBase64 || false,

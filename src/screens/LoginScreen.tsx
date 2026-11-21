@@ -17,6 +17,7 @@ import {
   ActivityIndicator,
   PermissionsAndroid,
   Animated,
+  Image,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -209,7 +210,7 @@ const LoginScreen: React.FC = () => {
       >
         {/* Logo & Title */}
         <View style={styles.header}>
-          <Icon name="local-shipping" size={80} color={colors.text.inverse} style={styles.logo} />
+          <Image source={require('../../app-icon.png')} style={styles.logo} accessibilityLabel="MaSoVa" />
           <Text style={styles.title}>MaSoVa Crew</Text>
           <Text style={styles.subtitle}>Staff Management System</Text>
         </View>
@@ -401,10 +402,10 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   logo: {
+    width: 88,
+    height: 88,
+    borderRadius: 20,
     marginBottom: spacing.base,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 4 },
-    textShadowRadius: 8,
   },
   title: {
     fontSize: typography.fontSize.hero,

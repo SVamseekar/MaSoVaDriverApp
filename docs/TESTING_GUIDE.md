@@ -6,7 +6,7 @@
 
 ```bash
 # Navigate to main project
-cd /Users/souravamseekarmarti/Projects/MaSoVa-restaurant-management-system
+cd ~/Projects/MaSoVa-restaurant-management-system
 
 # Start all required services:
 # - API Gateway (port 8080)
@@ -22,7 +22,7 @@ cd /Users/souravamseekarmarti/Projects/MaSoVa-restaurant-management-system
 
 ```bash
 # Open a new terminal
-cd /Users/souravamseekarmarti/Projects/MaSoVaDriverApp
+cd ~/Projects/MaSoVaCrewApp
 
 # For Android:
 npx react-native run-android
@@ -262,7 +262,7 @@ brew install --cask react-native-debugger
 
 **Solution:**
 ```bash
-cd /Users/souravamseekarmarti/Projects/MaSoVaDriverApp
+cd ~/Projects/MaSoVaCrewApp
 npm install
 cd ios && pod install && cd ..  # iOS only
 ```
@@ -433,7 +433,7 @@ curl -f http://localhost:8080/api/health || echo "⚠️  Backend not running!"
 
 # 2. Start React Native
 echo "📱 Starting React Native app..."
-cd /Users/souravamseekarmarti/Projects/MaSoVaDriverApp
+cd ~/Projects/MaSoVaCrewApp
 npx react-native run-android
 
 # 3. Show logs

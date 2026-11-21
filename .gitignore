@@ -84,3 +84,6 @@ CLAUDE.md
 .grok/
 .mcp.json
 .superpowers/
+_local/
+_to_delete/
+.vscode/

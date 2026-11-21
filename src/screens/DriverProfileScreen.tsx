@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.lg,
     padding: spacing.lg,
     marginBottom: spacing.lg,
-    ...shadows.medium,
+    ...shadows.card,
   },
   avatarContainer: {
     alignItems: 'center',
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
   ratingBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.semantic.warningLight,
+    backgroundColor: colors.semantic.warningBg,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     borderRadius: borderRadius.full,

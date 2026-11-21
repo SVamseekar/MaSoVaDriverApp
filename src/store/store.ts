@@ -1,4 +1,4 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, type Reducer } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { persistStore, persistReducer, createTransform, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -57,7 +57,13 @@ const rootReducer = combineReducers({
   [crewApi.reducerPath]: crewApi.reducer,
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// redux-persist 6 types make every slice optional in the preloaded state, which RTK 2 then
+// propagates into RootState (`state.auth` possibly undefined). Persistence only rehydrates
+// whitelisted slices on top of reducer defaults, so the runtime shape is the root reducer's.
+const persistedReducer = persistReducer(
+  persistConfig,
+  rootReducer as unknown as Reducer,
+) as unknown as typeof rootReducer;
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -82,5 +88,5 @@ setupListeners(store.dispatch);
 export const persistor = persistStore(store);
 
 // Export types
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;

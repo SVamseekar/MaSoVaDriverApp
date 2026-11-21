@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 /**
  * Driver App Design Tokens - React Native
  * Hybrid Uber-Neumorphic Design System
@@ -83,6 +84,7 @@ export const typography = {
     primary: 'System',
     ios: 'System',
     android: 'Roboto',
+    mono: Platform.select({ ios: 'Menlo', default: 'monospace' }),
   },
 
   fontSize: {

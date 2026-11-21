@@ -49,10 +49,12 @@ export const crewApi = createApi({
 
     // ── Sessions (clock in/out) ──────────────────────────────────────────────
 
+    // Self-service endpoint: the gateway identifies the caller from the JWT and the backend
+    // answers 204 (empty body, parsed as null) when the caller is not clocked in.
+    // employeeId only keys the cache so a different signed-in user never sees stale data.
     getMyActiveSession: builder.query<WorkingSession | null, string>({
-      query: (employeeId) => `/sessions/employee/${employeeId}`,
-      transformResponse: (sessions: WorkingSession[]) =>
-        sessions.find(s => s.status === 'ACTIVE') ?? null,
+      query: () => '/sessions/me/active',
+      transformResponse: (session: WorkingSession | null) => session ?? null,
       providesTags: ['Session'],
     }),
 

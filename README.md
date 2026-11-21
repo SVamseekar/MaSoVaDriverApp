@@ -349,7 +349,7 @@ Private - MaSoVa Restaurant Management System
 
 ## 👥 Contributors
 
-- Sourav Amseekar Marti (@souravamseekarmarti)
+- Marti Soura Vamseekar ([@SVamseekar](https://github.com/SVamseekar))
 
 ---
 
